@@ -1,0 +1,74 @@
+group 'Hackathon2024'
+version '1.0'
+
+apply plugin: 'java'
+apply plugin: 'groovy'
+apply plugin: 'java-library'
+apply plugin: "net.serenity-bdd.serenity-gradle-plugin"
+
+def versionSerenity='3.9.8'
+def versionCucumber='3.9.8'
+def versionApachePoi='5.2.2'
+def versionHealeniumWeb='3.4.4'
+
+repositories {
+    mavenCentral()
+}
+
+buildscript {
+    repositories {
+        maven {
+            url "https://plugins.gradle.org/m2/"
+        }
+    }
+    dependencies {
+        classpath "net.serenity-bdd:serenity-gradle-plugin:3.9.8"
+        classpath "com.epam.healenium:hlm-report:1.1.2"
+    }
+}
+
+apply plugin: "com.epam.healenium.hlm-report"
+
+dependencies {
+
+    implementation "net.serenity-bdd:serenity-core:${versionSerenity}"
+    implementation "net.serenity-bdd:serenity-junit:${versionSerenity}"
+    implementation "net.serenity-bdd:serenity-ensure:${versionSerenity}"
+    implementation "net.serenity-bdd:serenity-cucumber:${versionCucumber}"
+    implementation "net.serenity-bdd:serenity-screenplay:${versionSerenity}"
+    implementation "net.serenity-bdd:serenity-report-resources:${versionSerenity}"
+    implementation "net.serenity-bdd:serenity-screenplay-webdriver:${versionSerenity}"
+
+    implementation "com.epam.healenium:healenium-web:${versionHealeniumWeb}"
+
+    implementation "org.apache.poi:poi:${versionApachePoi}"
+    implementation "io.cucumber:datatable:${versionCucumber}"
+    implementation "org.apache.poi:poi-ooxml:${versionApachePoi}"
+    testImplementation "io.cucumber:cucumber-junit:${versionCucumber}"
+
+    implementation 'io.qameta.allure:allure-java-commons:2.11.0'
+
+    compileOnly 'org.projectlombok:lombok:1.18.24'
+    annotationProcessor 'org.projectlombok:lombok:1.18.24'
+
+    testImplementation 'junit:junit:4.13.1'
+    implementation 'org.testng:testng:6.14.3'
+    implementation 'org.junit.jupiter:junit-jupiter:5.8.1'
+    testImplementation 'org.junit.jupiter:junit-jupiter-api:5.8.2'
+
+    implementation group: 'org.slf4j', name: 'slf4j-api', version: '2.0.0-alpha5'
+    implementation group: 'org.slf4j', name: 'slf4j-simple', version: '2.0.0-alpha5'
+    implementation group: 'org.apache.logging.log4j', name: 'log4j-core', version: '2.18.0'
+
+    implementation 'io.github.bonigarcia:webdrivermanager:5.8.0'
+
+}
+test {
+    useJUnit {
+        include "**/*";
+        gradle.startParameter.continueOnFailure = true
+        testLogging.showStandardStreams = true
+        systemProperties System.getProperties()
+        systemProperty "cucumber.filter.tags", System.getProperty("cucumber.filter.tags")
+    }
+}
